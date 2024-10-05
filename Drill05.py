@@ -1,6 +1,7 @@
 from pico2d import *
 import random
-TUK_WIDTH, TUK_HEIGHT = 1000,800
+
+TUK_WIDTH, TUK_HEIGHT = 1000, 800
 
 
 def load_resources():
@@ -27,8 +28,8 @@ def handle_events():
 
 def reset_world():
     global running, cx, cy, frame
-    global hx,hy
-    global sx,sy
+    global hx, hy
+    global sx, sy
     global t
     global action
 
@@ -37,22 +38,28 @@ def reset_world():
     frame = 0
     action = 3
 
-    sx,sy = cx,cy # p1: 시작점
-    #hx, hy = 50, 50
-    hx, hy = random.randint(0,TUK_WIDTH), random.randint(0,TUK_HEIGHT) # p2: 끝점
+    set_new_target()
+
+
+def set_new_target():
+    global sx, sy, hx, hy, t
+    sx, sy = cx, cy  # p1: 시작점
+    # hx, hy = 50, 50
+    hx, hy = random.randint(0, TUK_WIDTH), random.randint(0, TUK_HEIGHT)  # p2: 끝점
     t = 0.0
+
 
 def render_world():
     clear_canvas()
     TUK_ground.draw(TUK_WIDTH // 2, TUK_HEIGHT // 2)
-    arrow.draw(hx,hy)
+    arrow.draw(hx, hy)
     character.clip_draw(frame * 100, 100 * action, 100, 100, cx, cy)
     update_canvas()
 
 
 def update_world():
     global frame
-    global cx,cy
+    global cx, cy
     global t
     global action
 
@@ -60,9 +67,12 @@ def update_world():
     action = 1 if cx < hx else 0
 
     if t <= 1.0:
-        cx = (1-t)*sx + t*hx
-        cy = (1-t)*sy + t*hy
+        cx = (1 - t) * sx + t * hx
+        cy = (1 - t) * sy + t * hy
         t += 0.001
+    else:
+        cx, cy = hx, hy
+        set_new_target()
 
 open_canvas(TUK_WIDTH, TUK_HEIGHT)
 hide_cursor()
